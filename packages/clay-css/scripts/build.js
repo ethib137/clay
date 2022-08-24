@@ -8,8 +8,8 @@
 const fs = require('fs');
 const {JSDOM} = require('jsdom');
 const path = require('path');
-const sass = require('sass');
 const {optimize} = require('svgo');
+const {Worker} = require('worker_threads');
 
 const OUTPUT_DIRECTORY = path.resolve('./lib');
 
@@ -283,24 +283,32 @@ async function build() {
 
 	await ensureDirectory(CSS_OUTPUT_DIRECTORY);
 
-	fileNames.forEach((fileName) => {
-		const destinationName = `${path.basename(fileName, '.scss')}.css`;
-		const destinationPath = path.join(
-			CSS_OUTPUT_DIRECTORY,
-			destinationName
-		);
+	const sassFile = (fileName) => {
+		return new Promise((resolve) => {
+			const destinationName = `${path.basename(fileName, '.scss')}.css`;
 
-		const results = sass.renderSync({
-			file: path.join(SASS_SOURCE_DIRECTORY, fileName),
-			outFile: `./${destinationName}`,
-			sourceMap: true,
-			sourceMapContents: true,
-			sourceMapRoot: '../../',
+			const destinationPath = path.join(
+				CSS_OUTPUT_DIRECTORY,
+				destinationName
+			);
+
+			const file = path.join(SASS_SOURCE_DIRECTORY, fileName);
+			const outFile = `./${destinationName}`;
+
+			const worker = new Worker('./scripts/render-sass.js', {
+				workerData: {file, outFile},
+			});
+
+			worker.on('message', (results) => {
+				fs.writeFileSync(destinationPath, results.css);
+				fs.writeFileSync(`${destinationPath}.map`, results.map);
+
+				resolve();
+			});
 		});
+	};
 
-		fs.writeFileSync(destinationPath, results.css);
-		fs.writeFileSync(`${destinationPath}.map`, results.map);
-	});
+	await Promise.all(fileNames.map((fileName) => sassFile(fileName)));
 }
 
 build()
