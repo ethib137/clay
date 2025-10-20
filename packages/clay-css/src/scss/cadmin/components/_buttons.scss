@@ -119,8 +119,6 @@ input[type='button'] {
 
 @each $color, $value in $cadmin-btn-palette {
 	@if not clay-is-map-unset($value) {
-		$variant-color: map-get($value, color);
-
 		$selector: if(
 			starts-with($color, '.') or
 				starts-with($color, '#') or
@@ -148,7 +146,6 @@ input[type='button'] {
 
 			#{$selector} {
 				@extend #{$placeholder} !optional;
-				--btn-separator-color: #{$variant-color};
 			}
 
 			#{$placeholder-focus} {
@@ -157,7 +154,6 @@ input[type='button'] {
 		} @else {
 			#{$selector} {
 				@include clay-button-variant($value);
-				--btn-separator-color: #{map-get($value, color)};
 			}
 		}
 	}

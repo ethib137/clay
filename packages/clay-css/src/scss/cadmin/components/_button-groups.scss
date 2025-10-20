@@ -1,3 +1,19 @@
+@each $variant, $value in $cadmin-btn-palette {
+	$group-selector: '.btn-group-#{$variant}';
+
+	$group-vertical-selector: '.btn-group-vertical-#{$variant}';
+	
+	$group-border-color: map-get($value, color);
+			
+	#{$group-selector} {
+		@include clay-apply-group-border-color($group-border-color, right, left);
+	}
+
+	#{$group-vertical-selector} {
+		@include clay-apply-group-border-color($group-border-color, bottom, top);
+	}
+}
+
 .btn-group,
 .btn-group-vertical {
 	display: inline-flex;
@@ -23,34 +39,6 @@
 }
 
 .btn-group {
-	> .btn:not(:last-child)::after {
-        content: ""; 
-        
-		position: absolute; 
-        top: 0; 
-		right: 0; 
-
-		width: 1px; 
-        height: 100%; 
-
-        background-color: var(--btn-separator-color, $cadmin-white);
-
-		z-index: 4;
-    }
-
-	> .btn:first-child {
-		border-right: none;
-	}
-
-	> .btn:last-child {
-		border-left: none;
-	}
-
-	> .btn:not(:first-child):not(:last-child) {
-		border-right: none;
-		border-left: none;
-	}
-
 	> .btn:not(:first-child),
 	> .btn-group:not(:first-child) {
 		margin-left: math-sign($cadmin-btn-border-width);
@@ -144,34 +132,6 @@
 	flex-direction: column;
 	justify-content: center;
 
-	> .btn:not(:last-child)::after {
-        content: ""; 
-        
-        position: absolute;
-		bottom: 0;
-        left: 0; 
-        
-        width: 100%;
-        height: 1px; 
-
-        background-color: var(--btn-separator-color, $cadmin-white);
-        
-		z-index: 4;
-    }
-
-	> .btn:first-child {
-		border-bottom: none;
-	}
-
-	> .btn:last-child {
-		border-top: none;
-	}
-
-	> .btn:not(:first-child):not(:last-child) {
-		border-top: none;
-		border-bottom: none;
-	}
-	
 	> .btn,
 	> .btn-group {
 		width: 100%;
