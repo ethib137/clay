@@ -1,0 +1,26 @@
+////
+/// @group button-groups
+////
+
+/// A mixin that apply the border color to the buttons in a group (horizontal or vertical),
+/// handling the :first-child, :last-child, and middle button positions.
+/// @param {Color} $border-color - The color to be used (e.g: #007bff).
+/// @param {String} $axis-a - The first side of the border to be applied (e.g: right - horizontal, bottom - vertical).
+/// @param {String} $axis-b - The second side of the border to be applied (e.g: left - horizontal, top - vertical).
+
+
+@mixin clay-apply-group-border-color($border-color, $axis-a, $axis-b) {
+    
+    > .btn:not(:first-child):not(:last-child) {
+        border-#{$axis-a}-color: $border-color;
+        border-#{$axis-b}-color: $border-color;
+    }
+
+    > .btn:first-child {
+        border-#{$axis-a}-color: $border-color;
+    }
+
+    > .btn:last-child {
+        border-#{$axis-b}-color: $border-color;
+    }
+}

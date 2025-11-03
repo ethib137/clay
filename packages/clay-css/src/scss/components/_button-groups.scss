@@ -1,3 +1,19 @@
+@each $variant, $value in $btn-palette {
+	$group-selector: '.btn-group-#{$variant}';
+
+	$group-vertical-selector: '.btn-group-vertical-#{$variant}';
+	
+	$group-border-color: map-get($value, color);
+			
+	#{$group-selector} {
+		@include clay-apply-group-border-color($group-border-color, right, left);
+	}
+
+	#{$group-vertical-selector} {
+		@include clay-apply-group-border-color($group-border-color, bottom, top);
+	}
+}
+
 .btn-group,
 .btn-group-vertical {
 	display: inline-flex;
